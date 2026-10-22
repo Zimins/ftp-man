@@ -1,0 +1,43 @@
+{
+  "name": "ftp-man",
+  "version": "0.1.0",
+  "description": "Manage 100+ FTP/SFTP servers locally and expose them to AI agents via MCP without leaking credentials",
+  "main": "./out/main/index.js",
+  "type": "module",
+  "private": true,
+  "author": "Lightsoft",
+  "license": "MIT",
+  "bin": {
+    "ftp-man-mcp": "./bin/ftp-man-mcp.mjs"
+  },
+  "scripts": {
+    "dev": "electron-vite dev",
+    "build": "electron-vite build && mkdir -p out/bridge && cp bin/ftp-man-mcp.mjs out/bridge/ftp-man-mcp.mjs",
+    "preview": "electron-vite preview",
+    "typecheck": "tsc --noEmit -p tsconfig.node.json && tsc --noEmit -p tsconfig.web.json",
+    "test": "TSX_TSCONFIG_PATH=tsconfig.node.json node --test --import tsx tests/*.test.ts",
+    "package": "pnpm build && electron-builder --mac --publish never",
+    "package:unsigned": "pnpm build && CSC_IDENTITY_AUTO_DISCOVERY=false electron-builder --mac --dir"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.30.0",
+    "basic-ftp": "^6.2.1",
+    "ssh2": "^1.17.0",
+    "zod": "^4.6.1"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "@types/ssh2": "^1.15.6",
+    "@vitejs/plugin-react": "^6.1.1",
+    "electron": "^44.3.0",
+    "electron-builder": "^26.15.3",
+    "electron-vite": "^5.0.0",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0",
+    "tsx": "^4.20.0",
+    "typescript": "^5.9.0",
+    "vite": "^8.2.2"
+  }
+}

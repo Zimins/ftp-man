@@ -1,0 +1,41 @@
+appId: dev.lightsoft.ftpman
+productName: FTP Man
+copyright: Copyright © 2026 Lightsoft
+artifactName: ${productName}-${version}-${arch}.${ext}
+directories:
+  output: release
+  buildResources: build
+files:
+  - out/**/*
+  - package.json
+extraResources:
+  - from: out/bridge
+    to: bridge
+npmRebuild: false
+mac:
+  category: public.app-category.developer-tools
+  icon: build/icon.icns
+  target:
+    - target: dmg
+      arch: [arm64, x64]
+    - target: zip
+      arch: [arm64, x64]
+  hardenedRuntime: true
+  gatekeeperAssess: false
+  entitlements: build/entitlements.mac.plist
+  entitlementsInherit: build/entitlements.mac.plist
+  notarize: true
+  minimumSystemVersion: '12.0'
+dmg:
+  icon: build/icon.icns
+  iconSize: 96
+  window:
+    width: 560
+    height: 380
+  contents:
+    - x: 150
+      y: 190
+    - x: 410
+      y: 190
+      type: link
+      path: /Applications

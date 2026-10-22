@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#2f7cf6"/>
+      <stop offset="1" stop-color="#0b3a8f"/>
+    </linearGradient>
+    <linearGradient id="folder" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffffff"/>
+      <stop offset="1" stop-color="#dbe7ff"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="18" stdDeviation="22" flood-color="#00194d" flood-opacity="0.45"/>
+    </filter>
+  </defs>
+  <!-- macOS squircle-ish rounded square with ~10% margin -->
+  <rect x="100" y="100" width="824" height="824" rx="186" fill="url(#bg)"/>
+  <rect x="100" y="100" width="824" height="824" rx="186" fill="none" stroke="#ffffff" stroke-opacity="0.12" stroke-width="6"/>
+  <!-- folder -->
+  <g>
+    <path d="M232 332 h190 c22 0 40 8 54 24 l34 38 h282 c34 0 60 26 60 60 v270 c0 34 -26 60 -60 60 H232 c-34 0 -60 -26 -60 -60 V392 c0 -34 26 -60 60 -60 z" fill="#9fc0ff" opacity="0.55"/>
+    <path d="M176 486 h672 c34 0 60 26 60 60 v194 c0 34 -26 60 -60 60 H236 c-34 0 -60 -26 -60 -60 z" fill="#00194d" opacity="0.28"/>
+    <path d="M172 470 h680 c34 0 60 26 60 60 v194 c0 34 -26 60 -60 60 H232 c-34 0 -60 -26 -60 -60 z" fill="url(#folder)"/>
+  </g>
+  <!-- server stack inside folder -->
+  <g transform="translate(372 522)">
+    <rect x="0" y="0" width="280" height="52" rx="14" fill="#0f4bb5"/>
+    <rect x="0" y="72" width="280" height="52" rx="14" fill="#0f4bb5" opacity="0.8"/>
+    <rect x="0" y="144" width="280" height="52" rx="14" fill="#0f4bb5" opacity="0.6"/>
+    <circle cx="36" cy="26" r="11" fill="#5ef0a4"/>
+    <circle cx="36" cy="98" r="11" fill="#5ef0a4"/>
+    <circle cx="36" cy="170" r="11" fill="#5ef0a4"/>
+    <rect x="70" y="18" width="150" height="16" rx="8" fill="#ffffff" opacity="0.7"/>
+    <rect x="70" y="90" width="120" height="16" rx="8" fill="#ffffff" opacity="0.7"/>
+    <rect x="70" y="162" width="170" height="16" rx="8" fill="#ffffff" opacity="0.7"/>
+  </g>
+  <!-- lock badge -->
+  <g transform="translate(700 640)">
+    <circle cx="0" cy="0" r="92" fill="#16c47a"/>
+    <circle cx="0" cy="0" r="92" fill="none" stroke="#ffffff" stroke-width="10"/>
+    <rect x="-40" y="-14" width="80" height="62" rx="14" fill="#ffffff"/>
+    <path d="M-26 -14 v-18 a26 26 0 0 1 52 0 v18" fill="none" stroke="#ffffff" stroke-width="14" stroke-linecap="round"/>
+    <circle cx="0" cy="16" r="10" fill="#16c47a"/>
+  </g>
+</svg>

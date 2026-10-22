@@ -1,0 +1,248 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>FTP Man — 100+ FTP servers, one MCP</title>
+  <meta name="description" content="FTP Man is a macOS app that keeps 100+ FTP/SFTP servers and their credentials on your Mac and exposes only MCP file tools to AI agents." />
+  <meta property="og:title" content="FTP Man" />
+  <meta property="og:description" content="Manage 100+ FTP/SFTP servers on your Mac. Credentials stay local; AI agents get MCP tools." />
+  <meta property="og:image" content="https://ftp-man.pages.dev/img/og.png" />
+  <meta property="og:type" content="website" />
+  <link rel="icon" type="image/png" href="/img/icon-256.png" />
+  <link rel="apple-touch-icon" href="/img/icon-256.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <div class="grid-bg" aria-hidden="true"></div>
+
+  <header class="top">
+    <a class="brand" href="#">
+      <img src="/img/icon-256.png" alt="" width="28" height="28" />
+      <span class="wordmark">FTP Man</span>
+      <span class="ver mono">v0.1.0</span>
+    </a>
+    <nav class="nav" aria-label="Sections">
+      <a href="#why">Why</a>
+      <a href="#how">How</a>
+      <a href="#tools">Tools</a>
+      <a href="#security">Security</a>
+      <a href="#download" class="nav-cta">Download</a>
+    </nav>
+  </header>
+
+  <main id="main">
+    <!-- ================= HERO ================= -->
+    <section class="hero">
+      <div class="hero-copy">
+        <p class="eyebrow mono"><span class="led on"></span>macOS · FTP · FTPS · SFTP · MCP</p>
+        <h1>
+          <span class="num">100</span> servers.<br />One command.
+        </h1>
+        <p class="lede">
+          
+          FTP Man keeps your hosting accounts and credentials on your Mac and hands AI agents like Claude Code <b>file-operation tools only</b>. Passwords never leave the machine by any path.
+        </p>
+        <div class="cta-row">
+          <a class="btn primary" href="#download">Download for macOS</a>
+          <a class="btn ghost" href="#how">See how it works</a>
+        </div>
+        <p class="fineprint mono">Apple silicon · Intel · macOS 12+ · Signed &amp; notarized</p>
+      </div>
+
+      <!-- Differentiation anchor: a batch run that actually runs -->
+      <div class="console" aria-label="Batch run demo" role="img">
+        <div class="console-bar">
+          <span class="dots"><i></i><i></i><i></i></span>
+          <span class="mono title">batch · write_file · tag=wordpress</span>
+          <span class="mono counter" id="console-counter">0 / 106</span>
+        </div>
+        <div class="console-prompt mono">
+          
+          › replace robots.txt on every server tagged wordpress
+        </div>
+        <ol class="console-lines mono" id="console-lines"></ol>
+        <div class="console-foot mono">
+          
+          1 approval · sequential · per-server isolation
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= SCREENSHOT ================= -->
+    <section class="shot">
+      <figure>
+        <img src="/img/app-en.png" alt="FTP Man screenshot: server list, remote file tree and file preview" width="2200" height="1440" loading="lazy" />
+        <figcaption class="mono">
+          
+          Server list · tag filters · remote file tree · text preview · approval queue
+        </figcaption>
+      </figure>
+    </section>
+
+    <!-- ================= WHY ================= -->
+    <section class="section" id="why">
+      <div class="section-head">
+        <span class="index mono">01</span>
+        <h2>Don’t hand your passwords to an agent</h2>
+      </div>
+      <div class="why-grid">
+        <article>
+          <h3>Credentials behind the Keychain</h3>
+          <p>Passwords and private keys are encrypted with the macOS Keychain and stored only on disk. No MCP tool ever returns a credential; agents refer to servers by name or id.</p>
+        </article>
+        <article>
+          <h3>Many servers at once</h3>
+          <p>Pick servers by tag or list, hand over one operation, and get a per-server result. One failure never stops the rest.</p>
+        </article>
+        <article>
+          <h3>Humans approve, everything is logged</h3>
+          <p>Require in-app approval for writes and deletes, or lock everything with read-only mode. Every call lands in the activity log.</p>
+        </article>
+        <article>
+          <h3>A real file browser</h3>
+          <p>Path bar, expandable tree, sortable columns, text preview, upload, download, rename and delete. See what the agent did with your own eyes.</p>
+        </article>
+      </div>
+    </section>
+
+    <!-- ================= HOW ================= -->
+    <section class="section" id="how">
+      <div class="section-head">
+        <span class="index mono">02</span>
+        <h2>Three steps</h2>
+      </div>
+      <ol class="steps">
+        <li>
+          <span class="step-num">1</span>
+          <h3>Import servers</h3>
+          <p>Register 100 servers from one CSV: name, host, protocol, account, tags. Passwords are encrypted on import.</p>
+          <pre class="mono">name,host,protocol,username,password,tags
+client-a,ftp.client-a.com,ftp,deploy,•••••,wordpress;client-a
+client-b,sftp.client-b.io,sftp,ubuntu,•••••,wordpress;client-b</pre>
+        </li>
+        <li>
+          <span class="step-num">2</span>
+          <h3>Connect an agent</h3>
+          <p>The app serves a token-protected MCP endpoint on 127.0.0.1. Paste one command from the Settings tab. A bridge for stdio-only clients is bundled.</p>
+          <pre class="mono">claude mcp add --transport http ftp-man \
+  http://127.0.0.1:7391/mcp \
+  --header "Authorization: Bearer ‹token›"</pre>
+        </li>
+        <li>
+          <span class="step-num">3</span>
+          <h3>Just ask</h3>
+          <p>“Read wp-config.php on every wordpress server and tell me where WP_DEBUG is on.” The agent makes one batch call and gets a result per server.</p>
+          <pre class="mono">batch {
+  tag: "wordpress",
+  operation: { type: "read_file",
+               path: "wp-config.php" }
+}
+→ 106 results · 101 ok · 5 failed</pre>
+        </li>
+      </ol>
+    </section>
+
+    <!-- ================= TOOLS ================= -->
+    <section class="section" id="tools">
+      <div class="section-head">
+        <span class="index mono">03</span>
+        <h2>Tools exposed to agents</h2>
+      </div>
+      <p class="section-lede">Exactly these thirteen. None of them returns a credential.</p>
+      <table class="tools mono">
+        <tbody>
+          <tr><td>list_servers</td><td class="kind r">read</td><td>Servers and tags, never credentials</td></tr>
+          <tr><td>test_connection</td><td class="kind r">read</td><td>Connectivity and base directory</td></tr>
+          <tr><td>list_files</td><td class="kind r">read</td><td>List a directory</td></tr>
+          <tr><td>get_file_info</td><td class="kind r">read</td><td>Stat a path</td></tr>
+          <tr><td>read_file</td><td class="kind r">read</td><td>File contents, size-limited</td></tr>
+          <tr><td>find_files</td><td class="kind r">read</td><td>Recursive glob search</td></tr>
+          <tr><td>download_file</td><td class="kind r">read</td><td>Download to this Mac</td></tr>
+          <tr><td>write_file</td><td class="kind w">write</td><td>Create or overwrite with text</td></tr>
+          <tr><td>upload_file</td><td class="kind w">write</td><td>Upload a local file</td></tr>
+          <tr><td>make_directory</td><td class="kind w">write</td><td>Create directories</td></tr>
+          <tr><td>rename_path</td><td class="kind w">write</td><td>Rename or move</td></tr>
+          <tr><td>delete_path</td><td class="kind w">write</td><td>Delete, optionally recursive</td></tr>
+          <tr><td>batch</td><td class="kind b">batch</td><td>Run one of the above across many servers</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- ================= SECURITY ================= -->
+    <section class="section" id="security">
+      <div class="section-head">
+        <span class="index mono">04</span>
+        <h2>Where the boundary is</h2>
+      </div>
+      <div class="boundary">
+        <div class="side local">
+          <span class="tag mono">On this Mac</span>
+          <ul>
+            <li>Encrypted credentials</li>
+            <li>Server connections and transfers</li>
+            <li>Approval queue and activity log</li>
+            <li>MCP endpoint bound to 127.0.0.1</li>
+          </ul>
+        </div>
+        <div class="gate mono">
+          Bearer token
+          <i></i>
+        </div>
+        <div class="side agent">
+          <span class="tag mono">What the agent sees</span>
+          <ul>
+            <li>Server names, hosts, tags</li>
+            <li>File listings and contents</li>
+            <li>Operation results and errors</li>
+            <li class="never">Passwords or keys — never</li>
+          </ul>
+        </div>
+      </div>
+      <ul class="sec-notes">
+        <li>The token lives in a 0600 file and can be regenerated from the app at any time.</li>
+        <li>The app is Developer ID signed and Apple notarized. No auto-update, no telemetry.</li>
+        <li>The connection pool is capped and batches run sequentially by default, respecting shared-host connection limits.</li>
+      </ul>
+    </section>
+
+    <!-- ================= DOWNLOAD ================= -->
+    <section class="section download" id="download">
+      <div class="section-head">
+        <span class="index mono">05</span>
+        <h2>Download</h2>
+      </div>
+      <div class="dl-grid">
+        <a class="dl" href="https://pub-b0dc3223e72142aa9c1b8272d0848b01.r2.dev/FTP-Man-0.1.0-arm64.dmg" data-arch="arm64">
+          <span class="dl-arch">Apple silicon</span>
+          <span class="dl-file mono">FTP-Man-0.1.0-arm64.dmg</span>
+          <span class="dl-meta mono">M1 and later · macOS 12+</span>
+        </a>
+        <a class="dl" href="https://pub-b0dc3223e72142aa9c1b8272d0848b01.r2.dev/FTP-Man-0.1.0-x64.dmg" data-arch="x64">
+          <span class="dl-arch">Intel</span>
+          <span class="dl-file mono">FTP-Man-0.1.0-x64.dmg</span>
+          <span class="dl-meta mono">Intel Macs · macOS 12+</span>
+        </a>
+      </div>
+      <p class="dl-note">Open the DMG and drag the app to Applications. The Claude Code connection command is in the Settings tab.</p>
+      <details class="mono">
+        <summary>Claude Desktop and other stdio clients</summary>
+        <pre>{ "mcpServers": { "ftp-man": {
+    "command": "node",
+    "args": ["/Applications/FTP Man.app/Contents/Resources/bridge/ftp-man-mcp.mjs"] } } }</pre>
+      </details>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <span class="mono">FTP Man · <a href="https://lightsoft.dev">Lightsoft</a> · 2026</span>
+    <span class="mono">Contact: lightsoft.dev</span>
+  </footer>
+
+  <script src="/app.js" defer></script>
+</body>
+</html>
