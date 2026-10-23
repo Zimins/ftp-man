@@ -45,7 +45,8 @@ export interface Credentials {
   passphrase?: string
 }
 
-export type ApprovalMode = 'none' | 'writes' | 'all'
+/** none: never ask · deletes: only delete_path · writes: anything that changes the server · all: every call. */
+export type ApprovalMode = 'none' | 'deletes' | 'writes' | 'all'
 
 export interface Settings {
   mcpEnabled: boolean

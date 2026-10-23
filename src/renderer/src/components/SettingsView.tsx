@@ -104,6 +104,7 @@ export function SettingsView({ settings, mcp, onNotify, onSettings }: Props): Re
           {t.settings.approvalMode}
           <select value={settings.approvalMode} onChange={(e) => void update({ approvalMode: e.target.value as ApprovalMode })}>
             <option value="none">{t.settings.approvalNone}</option>
+            <option value="deletes">{t.settings.approvalDeletes}</option>
             <option value="writes">{t.settings.approvalWrites}</option>
             <option value="all">{t.settings.approvalAll}</option>
           </select>

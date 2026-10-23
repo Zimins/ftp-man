@@ -5,7 +5,7 @@ import type { Settings } from '@shared/types'
 export const DEFAULT_SETTINGS: Settings = {
   mcpEnabled: true,
   mcpPort: 7391,
-  approvalMode: 'writes',
+  approvalMode: 'deletes',
   readOnly: false,
   maxTextBytes: 1_000_000,
   idleTimeoutSec: 90,
@@ -39,7 +39,7 @@ export class SettingsStore {
     if (!Number.isInteger(next.mcpPort) || next.mcpPort < 1024 || next.mcpPort > 65535) {
       throw new Error('mcpPort must be between 1024 and 65535')
     }
-    if (!['none', 'writes', 'all'].includes(next.approvalMode)) throw new Error('invalid approvalMode')
+    if (!['none', 'deletes', 'writes', 'all'].includes(next.approvalMode)) throw new Error('invalid approvalMode')
     if (!Number.isFinite(next.maxTextBytes) || next.maxTextBytes < 1024) throw new Error('maxTextBytes too small')
     if (!Number.isFinite(next.idleTimeoutSec) || next.idleTimeoutSec < 5) throw new Error('idleTimeoutSec too small')
     if (!Number.isInteger(next.maxConnections) || next.maxConnections < 1 || next.maxConnections > 50) throw new Error('maxConnections must be 1-50')

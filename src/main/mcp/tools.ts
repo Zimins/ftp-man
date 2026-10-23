@@ -3,7 +3,7 @@ import type { CallToolResult } from '@modelcontextprotocol/sdk/types.js'
 import { z } from 'zod'
 import { promises as fs } from 'node:fs'
 import { dirname } from 'node:path'
-import type { RemoteEntry, ServerRecord, Settings } from '@shared/types'
+import type { ApprovalMode, RemoteEntry, ServerRecord, Settings } from '@shared/types'
 import type { ServerStore, ServerWithTls } from '../store/servers'
 import type { ConnectionPool } from '../remote/pool'
 import type { RemoteClient } from '../remote/types'
@@ -20,7 +20,7 @@ export interface McpDeps {
   version: string
 }
 
-type Kind = 'read' | 'write'
+type Kind = 'read' | 'write' | 'delete'
 
 const INSTRUCTIONS = `FTP Man exposes the user's saved FTP/FTPS/SFTP servers. Credentials are stored locally and are never
 returned by any tool. Reference a server by its "id" or its exact "name" (from list_servers).
@@ -33,7 +33,8 @@ It runs sequentially by default (concurrency 1), isolates failures per server, a
 Leave concurrency at 1 unless the user asks otherwise: shared hosts often allow only one login per client at a time.
 
 Write operations (write_file, upload_file, delete_path, make_directory, rename_path, and batch with those)
-may require the user to approve them in the FTP Man app; if a call is denied or times out, tell the user.`
+may require the user to approve them in the FTP Man app, depending on the user's approval policy (by default only
+delete_path asks); if a call is denied or times out, tell the user.`
 
 function ok(data: unknown): CallToolResult {
   return { content: [{ type: 'text', text: typeof data === 'string' ? data : JSON.stringify(data, null, 2) }] }
@@ -120,6 +121,24 @@ type Operation = z.infer<typeof opSchema>
 
 const WRITE_OPS = new Set<Operation['type']>(['write_file', 'upload_file', 'delete_path', 'make_directory', 'rename_path'])
 
+function kindOf(type: Operation['type']): Kind {
+  if (type === 'delete_path') return 'delete'
+  return WRITE_OPS.has(type) ? 'write' : 'read'
+}
+
+function needsApproval(mode: ApprovalMode, kind: Kind): boolean {
+  switch (mode) {
+    case 'all':
+      return true
+    case 'writes':
+      return kind !== 'read'
+    case 'deletes':
+      return kind === 'delete'
+    default:
+      return false
+  }
+}
+
 export function createMcpServer(deps: McpDeps): McpServer {
   const server = new McpServer({ name: 'ftp-man', version: deps.version }, { instructions: INSTRUCTIONS })
 
@@ -138,11 +157,10 @@ export function createMcpServer(deps: McpDeps): McpServer {
     run: () => Promise<T>
   ): Promise<T> => {
     const settings = deps.settings()
-    if (kind === 'write' && settings.readOnly) {
+    if (kind !== 'read' && settings.readOnly) {
       throw new Error('FTP Man is in read-only mode; ask the user to disable it in the app to allow writes')
     }
-    const needsApproval = settings.approvalMode === 'all' || (settings.approvalMode === 'writes' && kind === 'write')
-    if (needsApproval) {
+    if (needsApproval(settings.approvalMode, kind)) {
       const approved = await deps.approvals.request(
         tool,
         summary,
@@ -328,8 +346,7 @@ export function createMcpServer(deps: McpDeps): McpServer {
   const single = async (toolName: string, ref: string, op: Operation): Promise<CallToolResult> => {
     try {
       const s = resolveServer(ref)
-      const kind: Kind = WRITE_OPS.has(op.type) ? 'write' : 'read'
-      const out = await guarded(toolName, kind, [s], `${s.name}: ${summarize(op)}`, () => execute(s, op))
+      const out = await guarded(toolName, kindOf(op.type), [s], `${s.name}: ${summarize(op)}`, () => execute(s, op))
       return ok(out)
     } catch (err) {
       return fail(errMessage(err))
@@ -538,10 +555,9 @@ export function createMcpServer(deps: McpDeps): McpServer {
         if ((!refs || refs.length === 0) && !tag) return fail('Provide "servers" and/or "tag"')
         const targets = deps.store.select({ ids: refs, tag })
         if (targets.length === 0) return fail('No servers matched the selection')
-        const kind: Kind = WRITE_OPS.has(operation.type) ? 'write' : 'read'
         const summary = `${summarize(operation)} on ${targets.length} server(s)`
 
-        const results = await guarded('batch', kind, targets, summary, async () => {
+        const results = await guarded('batch', kindOf(operation.type), targets, summary, async () => {
           const out: Array<Record<string, unknown>> = new Array(targets.length)
           let stopped = false
           let next = 0

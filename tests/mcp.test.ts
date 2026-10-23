@@ -178,6 +178,33 @@ test('read-only mode blocks writes, approval mode gates and can deny', async () 
   assert.equal(reads.json.content, 'host=b', 'reads do not need approval in writes mode')
 })
 
+test('deletes approval mode lets file changes through and only gates deletes', async () => {
+  const h = await harness({ approvalMode: 'deletes' })
+  const asked: string[] = []
+  h.approvals.onChange((list) => {
+    for (const req of list) {
+      asked.push(req.tool)
+      h.approvals.resolve(req.id, false)
+    }
+  })
+  const w = await h.call('write_file', { server: 'A', path: 'new.txt', content: 'hi' })
+  assert.equal(w.isError, false, w.text)
+  const md = await h.call('make_directory', { server: 'A', path: 'dir' })
+  assert.equal(md.isError, false, md.text)
+  const mv = await h.call('rename_path', { server: 'A', from: 'new.txt', to: 'moved.txt' })
+  assert.equal(mv.isError, false, mv.text)
+  const bw = await h.call('batch', { tag: 'grp', operation: { type: 'write_file', path: 'b.txt', content: 'x' } })
+  assert.equal(bw.json.succeeded, 2)
+  assert.deepEqual(asked, [], 'no approval asked for writes')
+
+  const del = await h.call('delete_path', { server: 'A', path: 'config.txt' })
+  assert.match(del.text, /denied/)
+  const bdel = await h.call('batch', { tag: 'grp', operation: { type: 'delete_path', path: 'config.txt' } })
+  assert.match(bdel.text, /denied/)
+  assert.deepEqual(asked, ['delete_path', 'batch'])
+  assert.equal(h.remotes.get(h.ids.a)!.files.has('/home/u/config.txt'), true, 'denied delete kept the file')
+})
+
 test('pool evicts a connection after an error and reconnects', async () => {
   const h = await harness()
   await h.call('read_file', { server: 'A', path: 'config.txt' })

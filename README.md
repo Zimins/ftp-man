@@ -120,13 +120,13 @@ claude mcp add --transport http ftp-man http://127.0.0.1:7391/mcp \
 
 > `client-a`, `client-b` 서버의 `robots.txt` 를 이 내용으로 바꿔줘.
 
-`batch { servers: ["client-a", "client-b"], operation: { type: "write_file", path: "robots.txt", content: "..." } }` → 앱에서 승인 → 서버별 성공/실패 반환.
+`batch { servers: ["client-a", "client-b"], operation: { type: "write_file", path: "robots.txt", content: "..." } }` → (승인 정책에 따라 앱에서 승인) → 서버별 성공/실패 반환.
 
 배치 다운로드는 `local_path` 에 `{server}` 를 넣어 서버별로 구분합니다 (`~/backup/{server}/.htaccess`).
 
 ## 안전장치
 
-- **승인 정책** (설정): `쓰기·삭제만 승인`(기본) / `모두 승인` / `승인 없음`. 승인 요청은 5분 후 자동 거부됩니다. 배치는 한 번의 승인으로 전체가 실행됩니다.
+- **승인 정책** (설정): `삭제만 승인`(기본, `delete_path`만 승인) / `쓰기·삭제 승인`(쓰기·업로드·폴더 생성·이름 변경·삭제) / `모두 승인` / `승인 없음`. 승인 요청은 5분 후 자동 거부됩니다. 배치는 한 번의 승인으로 전체가 실행됩니다.
 - **읽기 전용 모드**: 모든 쓰기 도구를 즉시 거부합니다.
 - **활동 로그**: 앱의 활동 탭과 `activity.jsonl` 에 도구·서버·내용·결과·소요시간이 기록됩니다.
 - **연결 풀**: 서버당 연결 하나를 재사용하고 같은 서버의 작업은 직렬화됩니다. 오류가 나면 연결을 버리고 다음 호출에서 재접속합니다.
